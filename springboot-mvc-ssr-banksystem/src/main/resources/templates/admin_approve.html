@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>待審核用戶</title>
+</head>
+<body>
+	
+	<h1>待審核用戶</h1>
+	
+	<table>
+		
+		<tr>
+			<td>編號</td>
+			<td>姓名</td>
+			<td>性別</td>
+			<td>郵件</td>
+			<td>電話</td>
+			<td>權限</td>
+			<td>上傳資料</td>
+			<td>審核</td>
+			
+		</tr>
+		
+		<tr th:each="pendingUser:${pendingUsers}">
+			<td th:text="${pendingUser.id}"></td>
+			<td th:text="${pendingUser.username}"></td>
+			<td th:text="${pendingUser.gender}"></td>
+			<td th:text="${pendingUser.email}"></td>
+			<td th:text="${pendingUser.phone}"></td>
+			<td th:text="${pendingUser.role}"></td>	
+			<td><button>檢視</button></td>	
+			<td> 
+			    <form th:action="@{/bank/admin/user-approval/approve/{id}(id=${pendingUser.id})}" method="post" style="display: inline;">
+                	<button type="submit" onclick="alert('審核已送出')">通過</button>
+				</form>
+				
+				<form th:action="@{/bank/admin/user-approval/reject/{id}(id=${pendingUser.id})}" method="post" style="display: inline;">
+                	<button type="submit">不通過</button>
+				</form>
+		
+			</td>	
+		</tr>
+		
+	</table>
+	
+	
+
+</body>
+</html>

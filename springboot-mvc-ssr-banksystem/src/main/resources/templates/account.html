@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>帳號總覽</title>
+</head>
+<body>
+	
+	帳號總覽 <br>
+	
+	<div th:each="account:${accounts}">
+		帳號：<span th:text="${account.accountNumber}"></span><br>
+		存款：<span th:text="${account.balance}"></span><br>
+		幣別：<span th:text="${account.currency.code}"></span><br>
+		
+		<form th:action="@{/bank/account/{id}/transaction-history (id=${account.id})}" method="get">	
+			<button type="submit">查詢交易紀錄</button>
+		</form>	
+	</div>
+	
+
+
+</body>
+</html>

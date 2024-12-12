@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>轉帳</title>
+</head>
+<body>
+	
+	<form th:action="@{/bank/transaction/exchange/check}" th:object="${exchangeDto}" method="post" >  
+		
+		<label>新台幣</label> <br>
+		<input type="number" th:field="*{amount}"> <br>
+		
+		<label>選擇幣別</label> <br>     
+		<select name="targetSpotSell">                           
+			<option th:each="exchangeRate:${exchangeRates}"
+			        th:text="${exchangeRate.currencyName} + ' (' + ${exchangeRate.spotSell} + ')'"
+			        th:value="${exchangeRate.spotSell}"></option>
+		</select> <br>
+
+	    <label>轉出帳號</label>
+		<input type="number" th:field="*{fromAccountNumber}"> 
+		<br>
+	
+	    <label>轉入帳號</label>
+		<input type="number" th:field="*{toAccountNumber}"> 
+		<br>
+		
+		<label>備註</label>
+		<input type="text" th:field="*{description}"> 
+		<br>  
+		
+		<button type="submit">下一步</button>
+		
+	</form>
+	
+	
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> <!-- 引入 Thymeleaf -->
+<head>
+<meta charset="UTF-8">
+<title>轉帳確認</title>
+
+</head>
+<body>
+
+	<h1>交易紀錄查詢</h1>    <!-- account 來自 TxHistoryPage -->
+	
+	<form th:action="@{/bank/account/{id}/transaction-history/between} (id=${account.id})" method="post">
+		交易區間：<input type="date" name="startDate" > ~  <input type="date" name="endDate"> <br>
+		<button type="submit">查詢</button>
+	</form>
+	
+	<br>
+	
+	<form th:action="@{/bank/account/{id}/transaction-history/top50" method="post">
+		<button type="submit">檢視最近 50 筆交易</button>
+	</form>
+	
+	顯示最近 50 筆交易 <br>
+	
+	<table>
+		<tr>
+			<td>交易帳戶</td>
+			<td>目標帳戶</td>
+			<td>交易金額</td>
+			<td>交易時間</td>
+			<td>交易類型</td>
+			<td>交易狀態</td>
+			<td>備註</td>
+		</tr>
+		<tr th:each="transactionDto:${transactionDtos}">
+			<td><span th:text="${transactionDto.fromAccountNumber}"></span></td>
+			<td><span th:text="${transactionDto.toAccountNumber}"></span></td>
+			<td><span th:text="${transactionDto.amount}"></span></td>
+			<td><span th:text="${transactionDto.transactionTime}"></span></td>
+			<td><span th:text="${transactionDto.transactionType}"></span></td>
+			<td><span th:text="${transactionDto.status}"></span></td>
+			<td><span th:text="${transactionDto.description}"></span></td>
+		</tr>
+	
+	</table>
+	
+	
+	
+	
+
+</body>
+</html>

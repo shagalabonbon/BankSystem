@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> <!-- 引入 Thymeleaf -->
+<head>
+<meta charset="UTF-8">
+<title>轉帳</title>
+
+</head>
+<body>
+
+	<h1> 臺幣轉帳 </h1>
+	
+	<form th:action="@{/bank/transaction/transfer/check}" th:object="${transferDto}"  method="post">
+	
+		轉出帳號：<input type="text" th:field="*{fromAccountNumber}" placeholder="" required><p/>            
+		轉入帳號：<input type="text" th:field="*{toAccountNumber}"   placeholder="" required><p/>
+		轉帳金額：<input type="text" th:field="*{amount}"            placeholder="" required><p/>
+		轉帳備註：<input type="text" th:field="*{description}"       placeholder="" required><p/>
+		
+		<button type="submit">進行轉帳</button><p/>
+		
+	</form>
+		
+	
+
+</body>
+</html>

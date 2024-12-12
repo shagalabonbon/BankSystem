@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> <!-- 引入 Thymeleaf -->
+<head>
+<meta charset="UTF-8">
+<title>換匯確認</title>
+
+</head>
+<body>
+
+	<h1> 交易明細 </h1>
+	
+	<table>
+		<tr>
+			<td>項目</td>
+			<td>明細</td>
+		</tr>
+		<tr>
+			<td>轉出帳號</td>
+			<td><span th:text="${exchangeDto.fromAccountNumber}"></span></td>
+		</tr>
+		<tr>
+			<td>轉入帳號</td>
+			<td><span th:text="${exchangeDto.toAccountNumber}"></span></td>
+		</tr>
+		<tr>
+			<td>換匯金額</td>
+			<td><span th:text="${transferDto.amount}"></span></td>
+		</tr>
+		<tr>
+			<td>交易匯率</td>
+			<td><span th:text="${targetRate}"></span></td>
+		</tr>
+		<tr>
+			<td>外幣金額</td>
+			<td><span th:text="${formatAmount}"></span></td>
+		</tr>
+		<tr>
+			<td>轉帳備註</td>
+			<td><span th:text="${exchangeDto.description}"></span></td>
+		</tr>
+	
+	</table>
+	
+	<form th:action="@{/bank/transaction/exchange/confirm}" th:object="${exchangeDto}"  method="post">
+	
+		<input type="hidden" th:field="*{fromAccountNumber}"><p/>            
+		<input type="hidden" th:field="*{toAccountNumber}"  ><p/>
+		<input type="hidden" th:field="*{amount}"           ><p/>
+		<input type="hidden" th:field="*{description}"      ><p/>
+		<input type="hidden" name="targetRate"   value="${targetRate}"   ><p/>
+		<input type="hidden" name="formatAmount" value="${formatAmount}" ><p/>
+		
+		
+		<button type="submit"> 確認換匯 </button><br>
+	</form>
+	
+	<form th:action="@{/bank/transaction/exchange}" method="get">
+		<button type="submit" onclick="alert=('交易取消');"> 取消交易 </button><br>
+	</form>
+	
+	
+
+</body>
+</html>

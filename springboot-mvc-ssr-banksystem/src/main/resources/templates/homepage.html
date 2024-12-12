@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<!-- Thymeleaf -->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<!-- BootStrap -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
+	crossorigin="anonymous">
+
+</head>
+
+<body>
+
+	<h1> 親愛的 
+	       <span th:text="${loginUserDto.username}"></span> 
+	       <span th:if="${loginUserDto.gender=='female'}">女士</span>   
+	       <span th:if="${loginUserDto.gender=='male'}">先生</span>   
+	     您好 
+	</h1> 
+	    
+	<br>    
+
+	這裡是登入後首頁
+	
+	<br>
+	
+
+	<nav>
+		<a href="/bank/transaction/transfer">轉帳</a> <br>
+		<a href="/bank/transaction/exchange">換匯</a> <br>
+		<a href="/bank/account/all-account">我的帳號</a>
+
+
+		<div class="dropdown">
+			<a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+				id="dropdownMenuLink" data-bs-toggle="dropdown"
+				aria-expanded="false"> 其他功能 </a>
+
+			<ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+				<li><a class="dropdown-item" href="/bank/user/update">變更用戶資料</a></li>
+				<li><a class="dropdown-item" href="/bank/transaction/exchange-rate">當日牌價匯率</a></li>
+				<li><a class="dropdown-item" href="/bank/user/">交易紀錄查詢</a></li>
+			</ul>
+		</div>
+		
+		
+		<form th:action="@{/bank/logout}" method="post">
+    		<button type="submit">登出</button>
+		</form>
+		
+	</nav>
+	
+	
+	<div >
+		台幣帳戶：   <br>
+		
+		總存款：
+	</div>
+	
+	<div >
+		外幣帳戶：   <br>
+		
+		總存款：
+	</div>
+	
+	
+
+
+
+
+
+	<!-- BootStrap -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+		crossorigin="anonymous"></script>
+
+</body>
+</html>

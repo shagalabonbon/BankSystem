@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>全用戶管理列表</title>
+</head>
+<body>
+	
+	<table>
+		
+		<tr>
+			<td>編號</td>
+			<td>姓名</td>
+			<td>性別</td>
+			<td>郵件</td>
+			<td>電話</td>
+			<td>權限</td>
+			<td>刪除</td>
+			<td>修改</td>
+		</tr>
+		
+		<tr th:each="allUserDto:${allUserDtos}">
+			<td th:text="${allUserDto.id}"></td>
+			<td th:text="${allUserDto.username}"></td>
+			<td th:text="${allUserDto.gender}"></td>
+			<td th:text="${allUserDto.email}"></td>
+			<td th:text="${allUserDto.phone}"></td>
+			<td th:text="${allUserDto.role}"></td>
+			<td><a th:href="@{/bank/user/delete/{id}(id=${allUserDto.id})}" >刪除</a></td>  <!-- 使用 <a> 設計按鈕 -->
+			<td><a th:href="@{/bank/user/update/{id}(id=${allUserDto.id})}" >修改</a></td>
+		
+		</tr>
+		
+	</table>
+
+
+</body>
+</html>

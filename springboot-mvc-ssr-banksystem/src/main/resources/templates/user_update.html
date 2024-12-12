@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> <!-- 引入 Thymeleaf -->
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<body>
+
+	<h1> USER 更新 </h1>  
+	
+	<form th:action="@{/bank/user/update/{id}(id=${loginUserDto.id})}" th:object="${loginUserDto}" method="post">
+	
+		姓名：<input type="text" th:field="*{username}" placeholder="Name" readonly><p/>
+		
+		郵箱：<input type="text" th:field="*{email}" placeholder="Email" required><p/>            <!-- name 會自動映射到 @modelattribute 物件中的屬性 -->
+		
+		性別：
+        <label><input type="radio" th:field="*{gender}"  value="male" required> 男</label> 
+		<label><input type="radio" th:field="*{gender}"  value="female" required> 女</label><p/> 
+        
+		電話：<input type="text" th:field="*{phone}" placeholder="Phone" required><p/>
+		
+		<button type="submit">更新資料</button><p/>
+		
+	</form>
+	
+	
+		
+	
+
+</body>
+</html>

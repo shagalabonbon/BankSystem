@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> <!-- 引入 Thymeleaf -->
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+</head>
+<body>
+
+	<h1> USER 註冊 </h1>
+	
+	<form th:action="@{/bank/user/register}" method="post" onsubmit="return validatePassword()">   <!-- onsubmit 會 return Boolean 決定表單是否提交 -->
+	
+		姓名：
+		<input type="text" name="username" placeholder="Name" required><p/>
+		
+		身分證字號：
+		<input type="text" name="idNumber" placeholder="idNumber" required><p/>
+
+		性別：
+        <label><input type="radio" name="gender" value="male" required> 男</label>
+		<label><input type="radio" name="gender" value="female" required> 女</label><p/>
+       
+        郵件：
+        <input type="text" name="email" placeholder="Email" required><p/>            <!-- name 會自動映射到 @modelattribute 物件中的屬性 -->
+	
+		電話：
+		<input type="text" name="phone" placeholder="Phone" required><p/>
+		
+		密碼：
+		<input type="password" name="rawPassword" placeholder="Password" required><p/>
+		
+		確認密碼：
+		<input type="password" name="checkPassword" placeholder="checkPassword"><p/>
+		
+		
+		<button type="submit">註冊</button><p/>
+		
+	</form>
+	
+	
+	
+	<script>
+	function validatePassword (){
+			
+		var password = document.getElementsByName("password")[0].value;
+	    var checkPassword = document.getElementsByName("checkPassword")[0].value;
+	    
+	    if (password !== checkPassword) {
+	        alert("輸入的密碼不一致!");
+	        return false;               // 密碼不一致，阻止提交
+	    }
+	};	
+		
+	</script>
+		
+	
+
+</body>
+</html>

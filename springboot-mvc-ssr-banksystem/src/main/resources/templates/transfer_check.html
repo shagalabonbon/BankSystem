@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"> <!-- 引入 Thymeleaf -->
+<head>
+<meta charset="UTF-8">
+<title>轉帳確認</title>
+
+</head>
+<body>
+
+	<h1> 交易明細 </h1>
+	
+	<table>
+		<tr>
+			<td>項目</td>
+			<td>明細</td>
+		</tr>
+		<tr>
+			<td>轉出帳號</td>
+			<td><span th:text="${transferDto.fromAccountNumber}"></span></td>
+		</tr>
+		<tr>
+			<td>轉入帳號</td>
+			<td><span th:text="${transferDto.toAccountNumber}"></span></td>
+		</tr>
+		<tr>
+			<td>轉帳金額</td>
+			<td><span th:text="${transferDto.amount}"></span></td>
+		</tr>
+		<tr>
+			<td>轉帳備註</td>
+			<td><span th:text="${transferDto.description}"></span></td>
+		</tr>
+	
+	</table>
+	
+	<form th:action="@{/bank/transaction/transfer/confirm}" th:object="${transferDto}"  method="post">
+	
+		<input type="hidden" th:field="*{fromAccountNumber}"><p/>            
+		<input type="hidden" th:field="*{toAccountNumber}"  ><p/>
+		<input type="hidden" th:field="*{amount}"           ><p/>
+		<input type="hidden" th:field="*{description}"      ><p/>
+		
+		<button type="submit"> 確認轉帳 </button><br>
+	</form>
+	
+	<form th:action="@{/bank/transaction/transfer}" method="get">
+		<button type="submit" onclick="alert=('交易取消');"> 取消交易 </button><br>
+	</form>
+	
+	
+
+</body>
+</html>

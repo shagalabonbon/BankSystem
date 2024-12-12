@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>轉帳</title>
+</head>
+<body>
+
+    換匯服務
+	
+	<form th:action="@{/bank/transaction/exchange/detail}" method="post" >
+		
+		選擇幣別 <br>
+		<select name="targetRate" >
+			<option th:each="exchangeRate:${exchangeRates}"
+			        th:text="${exchangeRate.currencyName}" 
+			        th:value="${exchangeRate.spotsell}"></option>
+			
+		</select>
+
+        <p>參考匯率：<span th:text="${exchangeRate.spotSell}">尚無資料</span><br></p>
+		<p>更新時間：<span th:text="${exchangeRate.renewTime}">尚無更新時間</span></p>
+		
+		<button type="submit">下一步</button>
+		
+	</form>
+	
+	
+
+</body>
+</html>
