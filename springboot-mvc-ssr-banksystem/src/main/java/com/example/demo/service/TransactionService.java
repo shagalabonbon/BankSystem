@@ -23,7 +23,7 @@ public interface TransactionService {
 	List<TransactionDto> getAllTransactionHistory(Long accountId);
 	
 	// 查詢區間交易歷史
-	List<TransactionDto> getIntervalTransactionHistory(Long accountId,Date startDate, Date endDate);  
+	List<TransactionDto> getIntervalTransactionHistory(Long accountId,String startDate,String endDate);  
 	
 	
 	

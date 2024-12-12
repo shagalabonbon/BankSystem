@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
-import java.sql.Date;
+
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,21 +70,20 @@ public class AccountController {
 	@PostMapping("/{id}/transaction-history/between")
 	public String intervalTxHistory(@PathVariable Long accountId, @RequestParam String startDate,@RequestParam String endDate , Model model) {
 		
-		List<TransactionDto> transactionDtos = transactionService.getIntervalTransactionHistory(accountId, startDate, endDate);
+		List<TransactionDto> chosenTransactionDtos = transactionService.getIntervalTransactionHistory(accountId,startDate,endDate);
 		
-		model.addAttribute("transactionDtos",transactionDtos);
+		model.addAttribute("transactionDtos",chosenTransactionDtos);  // 覆蓋 transactionDtos 以更新前端顯示資料 
 		
 		return "account_tx_history";
 		
 	}
 	
 	@PostMapping("/{id}/transaction-history/top50")
-	public String top50TxHistory( @RequestParam Date startDate,@RequestParam Date endDate , Model model) {
+	public String top50TxHistory( @PathVariable("id") Long accountId , Model model) {
 		
+		List<TransactionDto> top50TransactionDtos = transactionService.getTop50TransactionHistory(accountId);
 		
-		transactionService.getTop50TransactionHistory(null)
-		
-		model.addAttribute(model)
+		model.addAttribute("transactionDtos",top50TransactionDtos);
 		
 		return "account_tx_history";
 		

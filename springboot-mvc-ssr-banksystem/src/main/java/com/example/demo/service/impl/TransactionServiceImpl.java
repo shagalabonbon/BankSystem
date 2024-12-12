@@ -85,15 +85,17 @@ public class TransactionServiceImpl implements TransactionService {
 	
 	
 	@Override
-	public List<TransactionDto> getIntervalTransactionHistory(Long accountId, Date startDate, Date endDate) {
+	public List<TransactionDto> getIntervalTransactionHistory(Long accountId, String startDate, String endDate) {
 		
-		java.sql.Date sqlStartDate = new java.sql.Date(startDate);
+		Date start = new Date(startDate);
 		
-		java.sql.Date sqlEndDate   = new java.sql.Date(endDate);
+		Date end   = new Date(endDate);
 		
-		transactionRepository.findByAccountIdAndTransactionTimeBetweenOrderByTransactionTimeDesc(accountId, startDate, endDate);
-		
-		return null;
+		List<TransactionDto> transactionDtos = transactionRepository.findRecordsByChosenTime(accountId, start, end)
+				                                                    .stream()
+				                                                    .map(tx->modelMapper.map(tx, TransactionDto.class))
+				                                                    .toList();
+		return transactionDtos;
 	}
 	
 	
