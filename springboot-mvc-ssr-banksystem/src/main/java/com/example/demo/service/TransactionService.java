@@ -14,20 +14,23 @@ import com.example.demo.model.enums.TransactionType;
 public interface TransactionService {
 	
 	// 建立交易紀錄
-	Transaction createTxRecord(String fromAccountNumber,String toAccountNumber,BigDecimal amount,TransactionType transactionType,String description);     
+	Transaction createTransactionRecord(String fromAccountNumber,String toAccountNumber,BigDecimal amount,TransactionType transactionType,String description);     
 	
 	// 查詢前50筆交易歷史
-	List<TransactionDto> getTop50TxHistory(Long accountId); 
+	List<TransactionDto> getTop50TransactionHistory(Long accountId); 
 	
 	// 查詢所有帳戶交易紀錄
-	List<TransactionDto> getAllTxHistory(Long accountId);
+	List<TransactionDto> getAllTransactionHistory(Long accountId);
 	
 	// 查詢區間交易歷史
-	List<TransactionDto> getIntervalTxHistory(Long accountId, Date startDate, Date endDate);  
+	List<TransactionDto> getIntervalTransactionHistory(Long accountId,Date startDate, Date endDate);  
 	
 	
+	
+	// 轉帳
 	Transaction transfer(String fromAccountNumber,String toAccountNumber, BigDecimal amount, String description) ;
 	
+	// 換匯
 	Transaction exchange(String fromAccountNumber,String toAccountNumber,BigDecimal exchangeRate ,BigDecimal amount,String description);
 }
 	

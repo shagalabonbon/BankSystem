@@ -1,6 +1,8 @@
 package com.example.demo.exception;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,6 +20,9 @@ import com.example.demo.exception.userexception.UserNotFoundException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+	
+	Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+	
 	
 	@ExceptionHandler(PasswordInvalidException.class)
     public String handleSecurityException(Exception ex, Model model) {
@@ -44,7 +49,7 @@ public class GlobalExceptionHandler {
         
 		if( ex instanceof UserAlreadyExistException ){
 			
-			System.out.println("UserAlreadyExistException 發生： " + ex.getMessage());	// 記錄錯誤（可選）
+			logger.error( ex.getMessage() );	// 記錄錯誤（可選）
 		}
 		
         model.addAttribute("errorMessage", ex.getMessage());

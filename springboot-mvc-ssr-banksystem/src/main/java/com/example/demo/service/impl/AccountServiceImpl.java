@@ -171,8 +171,6 @@ public class AccountServiceImpl implements AccountService {
 
 		Account account = accountRepository.findById(userId)
 				                           .orElseThrow(()->new AccountNotFoundException());
-	
-		
 		return account;
 	}
 	

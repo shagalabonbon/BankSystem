@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import java.security.Identity;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +16,10 @@ import com.example.demo.exception.userexception.UserNotFoundException;
 import com.example.demo.model.dto.UserDto;
 import com.example.demo.model.entity.User;
 import com.example.demo.service.AccountService;
-import com.example.demo.service.PasswordService;
 import com.example.demo.service.TransactionService;
 import com.example.demo.service.UserService;
-import com.example.demo.service.impl.AccountServiceImpl;
-
 import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.Session;
-
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -57,24 +50,6 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	private TransactionService transactionService;
-	
-	@Autowired
-	private AccountService accountService;
-	
-	  
-	
-	@GetMapping
-	public String getAllUsers( Model model ) {
-		
-		List<UserDto> userDtos = userService.findAllUsers();
-		
-		model.addAttribute("userDtos",userDtos);
-		
-		return "user";    // 引導至 user.html ( Thymeleaf )
-	}
-	
 	
 	// 註冊服務 ( OK! ) -----------------------------
 		
@@ -84,14 +59,10 @@ public class UserController {
 		return "user_register";
 	}
 	
-	
-	
 	@PostMapping("/register")
 	public String userRegister ( @ModelAttribute User user , @RequestParam String rawPassword , Model model) {  // 輸入密碼為原始密碼 ( 尚未加鹽 )
 		
 		userService.register(user.getUsername(),user.getIdNumber(),rawPassword,user.getGender(),user.getEmail(),user.getPhone());
-		
-		model.addAttribute("message","註冊成功");
 		
 		return "user_register_result";   
 	}  

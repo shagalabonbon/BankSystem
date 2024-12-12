@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.exception.accountexception.AccountNotFoundException;
 import com.example.demo.exception.accountexception.InsufficientFundsException;
 import com.example.demo.model.dto.TransactionDto;
 import com.example.demo.model.entity.Account;
@@ -39,42 +41,31 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	public Transaction createTransactionRecord( String fromAccountNumber,String toAccountNumber,BigDecimal amount,TransactionType transactionType,String description ) {
 		
-		// 狀態 
+		Transaction newTransaction = new Transaction();
 		
-		try {
+		newTransaction.setFromAccountNumber(fromAccountNumber);
+		newTransaction.setToAccountNumber(toAccountNumber);
+		newTransaction.setAmount(amount);
+		newTransaction.setTransactionType(transactionType);
+		newTransaction.setStatus(TransactionStatus.Pending);
+		newTransaction.setDescription(description);
+		newTransaction.setTransactionTime(new Timestamp(System.currentTimeMillis()));
+		newTransaction.setAccount(accountRepository.findByAccountNumber(fromAccountNumber)
+				                                   .orElseThrow(()->new AccountNotFoundException("帳戶不存在")));
 		
-			Transaction newTransaction = new Transaction();
-			
-			newTransaction.setFromAccountNumber(fromAccountNumber);
-			newTransaction.setToAccountNumber(toAccountNumber);
-			newTransaction.setAmount(amount);
-			newTransaction.setTransactionType(transactionType);
-			newTransaction.setStatus(TransactionStatus.Pending);
-			newTransaction.setDescription(description);
-			newTransaction.setTransactionTime(new Timestamp(System.currentTimeMillis()));
-			newTransaction.setAccount(accountRepository.findByAccountNumber(fromAccountNumber).orElseThrow(()->new RuntimeException("帳戶不存在")));
-			
-			return newTransaction;
-			
-		}catch(Exception e){
-			
-			e.printStackTrace();
-		}
-		
-		return null;  /* 需要更新錯誤處理 */
-			
-			
+		return newTransaction;
+						
 	}
 	
 	
 	@Override
 	public List<TransactionDto> getAllTransactionHistory(Long accountId){
 		
-		List<TransactionDto> allTxHistory = transactionRepository.findByAccountIdOrderByTransactionTimeDesc(accountId)
-                												 .stream()
-                												 .map(tx -> modelMapper.map(tx,TransactionDto.class))
-                												 .toList();
-		return allTxHistory; 
+		List<TransactionDto> allTransactionHistory = transactionRepository.findByAccountIdOrderByTransactionTimeDesc(accountId)
+                												          .stream()
+                												          .map(tx -> modelMapper.map(tx,TransactionDto.class))
+                												          .toList();
+		return allTransactionHistory; 
 	}
 	
 
@@ -85,18 +76,20 @@ public class TransactionServiceImpl implements TransactionService {
 		
 		// 獲取前50筆紀錄	 	                           
 				                           
-		List<TransactionDto> Top50TxHistory = transactionRepository.findTop50ByAccountIdOrderByTransactionTimeDesc(accountId)
-				                                                   .stream()
-				                                                   .map(tx -> modelMapper.map(tx,TransactionDto.class))
-				                                                   .toList();			                           
-		return Top50TxHistory;
+		List<TransactionDto> Top50TransactionHistory = transactionRepository.findTop50ByAccountIdOrderByTransactionTimeDesc(accountId)
+				                                                            .stream()
+				                                                            .map(tx -> modelMapper.map(tx,TransactionDto.class))
+				                                                            .toList();			                           
+		return Top50TransactionHistory;
 	}
 	
 	
 	@Override
 	public List<TransactionDto> getIntervalTransactionHistory(Long accountId, Date startDate, Date endDate) {
 		
+		java.sql.Date sqlStartDate = new java.sql.Date(startDate);
 		
+		java.sql.Date sqlEndDate   = new java.sql.Date(endDate);
 		
 		transactionRepository.findByAccountIdAndTransactionTimeBetweenOrderByTransactionTimeDesc(accountId, startDate, endDate);
 		

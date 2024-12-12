@@ -52,8 +52,7 @@ public class AccountController {
 		
 		// 驗證帳戶 ( 可改成從 session 獲取 )
 		
-		Account account = accountService.getAccount(accountId)
-				                        .orElseThrow(()->new RuntimeException("帳戶不存在"));
+		Account account = accountService.getAccount(accountId);
 		
 		// 尋找所有交易紀錄
 		
@@ -68,7 +67,7 @@ public class AccountController {
 	}
 	
 	@PostMapping("/{id}/transaction-history/between")
-	public String intervalTxHistory(@PathVariable Long accountId, @RequestParam Date startDate,@RequestParam Date endDate , Model model) {
+	public String intervalTxHistory(@PathVariable Long accountId, @RequestParam String startDate,@RequestParam String endDate , Model model) {
 		
 		List<TransactionDto> transactionDtos = transactionService.getIntervalTransactionHistory(accountId, startDate, endDate);
 		
