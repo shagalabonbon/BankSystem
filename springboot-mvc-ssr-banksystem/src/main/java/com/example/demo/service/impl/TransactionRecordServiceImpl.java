@@ -30,7 +30,7 @@ import com.example.demo.service.TransactionService;
 public class TransactionRecordServiceImpl implements TransactionRecordService {
 	
 	@Autowired
-	private TransactionRecordRepository transactionRepository;
+	private TransactionRecordRepository transactionRecordRepository;
 	
 	@Autowired
 	private AccountRepository accountRepository;
@@ -65,7 +65,7 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
 	@Override
 	public List<TransactionRecordDto> getAllTransactionHistory(Long accountId){
 		
-		List<TransactionRecordDto> allTransactionHistory = transactionRepository.findByAccountIdOrderByTransactionTimeDesc(accountId)
+		List<TransactionRecordDto> allTransactionHistory = transactionRecordRepository.findByAccountIdOrderByTransactionTimeDesc(accountId)
                 												                .stream()
                 												                .map(tx -> modelMapper.map(tx,TransactionRecordDto.class))
                 												                .toList();
@@ -80,7 +80,7 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
 		
 		// 獲取前50筆紀錄	 	                           
 				                           
-		List<TransactionRecordDto> Top50TransactionHistory = transactionRepository.findTop50ByAccountIdOrderByTransactionTimeDesc(accountId)
+		List<TransactionRecordDto> Top50TransactionHistory = transactionRecordRepository.findTop50ByAccountIdOrderByTransactionTimeDesc(accountId)
 				                                                            .stream()
 				                                                            .map(tx -> modelMapper.map(tx,TransactionRecordDto.class))
 				                                                            .toList();			                           
@@ -91,14 +91,16 @@ public class TransactionRecordServiceImpl implements TransactionRecordService {
 	@Override
 	public List<TransactionRecordDto> getIntervalTransactionHistory(Long accountId, String startDate, String endDate) {
 		
+		@SuppressWarnings("deprecation")
 		Date start = new Date(startDate);
 		
+		@SuppressWarnings("deprecation")
 		Date end   = new Date(endDate);
 		
-		List<TransactionRecordDto> transactionDtos = transactionRepository.findRecordsByChosenTime(accountId, start, end)
-				                                                    .stream()
-				                                                    .map(tx->modelMapper.map(tx, TransactionRecordDto.class))
-				                                                    .toList();
+		List<TransactionRecordDto> transactionDtos = transactionRecordRepository.findRecordsByChosenTime(accountId, start, end)
+				                                                                .stream()
+				                                                                .map(tx->modelMapper.map(tx, TransactionRecordDto.class))
+				                                                                .toList();
 		return transactionDtos;
 	}
 	

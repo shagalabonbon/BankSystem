@@ -17,6 +17,7 @@ import com.example.demo.model.dto.TransactionRecordDto;
 import com.example.demo.model.dto.UserDto;
 import com.example.demo.model.entity.Account;
 import com.example.demo.service.AccountService;
+import com.example.demo.service.TransactionRecordService;
 import com.example.demo.service.TransactionService;
 
 import jakarta.servlet.http.HttpSession;
@@ -30,6 +31,10 @@ public class AccountController {
 	
 	@Autowired
 	private TransactionService transactionService;
+	
+	@Autowired
+	private TransactionRecordService transactionRecordService;
+	
 	
 	@GetMapping("/all-account")
 	public String getAllUserAccounts( Model model , HttpSession session) {
@@ -57,7 +62,7 @@ public class AccountController {
 		
 		// 尋找所有交易紀錄
 		
-		List<TransactionRecordDto> transactionDtos = transactionService.getAllTransactionHistory(accountId);
+		List<TransactionRecordDto> transactionDtos = transactionRecordService.getAllTransactionHistory(accountId);
 		
 		model.addAttribute("account",account);
 		
@@ -70,7 +75,7 @@ public class AccountController {
 	@PostMapping("/{id}/transaction-history/between")
 	public String intervalTxHistory(@PathVariable("id") Long accountId, @RequestParam String startDate,@RequestParam String endDate , Model model) {
 		
-		List<TransactionRecordDto> chosenTransactionDtos = transactionService.getIntervalTransactionHistory(accountId,startDate,endDate);
+		List<TransactionRecordDto> chosenTransactionDtos = transactionRecordService.getIntervalTransactionHistory(accountId,startDate,endDate);
 		
 		model.addAttribute("transactionDtos",chosenTransactionDtos);  // 覆蓋 transactionDtos 以更新前端顯示資料 
 		
@@ -81,7 +86,7 @@ public class AccountController {
 	@PostMapping("/{id}/transaction-history/top50")
 	public String top50TxHistory( @PathVariable("id") Long accountId , Model model) {
 		
-		List<TransactionRecordDto> top50TransactionDtos = transactionService.getTop50TransactionHistory(accountId);
+		List<TransactionRecordDto> top50TransactionDtos = transactionRecordService.getTop50TransactionHistory(accountId);
 		
 		model.addAttribute("transactionDtos",top50TransactionDtos);
 		
@@ -91,12 +96,10 @@ public class AccountController {
 	
 	
 	
-	
-	
 	@PostMapping("/TransactionHistory/{accountId}")
 	public String getTransactionHistory(@PathVariable Long accountId) {
 		
-		transactionService.getTop50TransactionHistory(accountId);
+		transactionRecordService.getTop50TransactionHistory(accountId);
 		
 		return "account_TransactionHistory";
 	}

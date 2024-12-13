@@ -44,8 +44,8 @@ public class User {
 	
 	private String    approve;         // 審核
 	
-	@OneToMany(mappedBy = "user")  
-    private List<Card> cards;          // 卡片列表
+//	@OneToMany(mappedBy = "user")  
+//   private List<Card> cards;          // 卡片列表
     
     @OneToMany(mappedBy = "user")     
     private List<Account> accounts;    // 帳戶列表

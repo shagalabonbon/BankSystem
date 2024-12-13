@@ -13,12 +13,13 @@
 		存款：<span th:text="${account.balance}"></span><br>
 		幣別：<span th:text="${account.currency.code}"></span><br>
 		
-		<form th:action="@{/bank/account/{id}/transaction-history (id=${account.id})}" method="get">	
+		<form th:action="@{/bank/account/{id}/transaction-history (id=${account.id})}" method="get">
+			
 			<button type="submit">查詢交易紀錄</button>
 		</form>	
 	</div>
 	
-
+   <!-- 將 accountId 資料傳遞 -->
 
 </body>
 </html>

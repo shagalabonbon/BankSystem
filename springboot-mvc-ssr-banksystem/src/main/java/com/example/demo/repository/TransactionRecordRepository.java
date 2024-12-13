@@ -21,8 +21,8 @@ public interface TransactionRecordRepository extends JpaRepository<TransactionRe
 	List<TransactionRecord> findByAccountIdOrderByTransactionTimeDesc(Long accountId);
 	
 	// 尋找區間 (修正)
-	@Query(value = "SELECT * From transaction_record WHERE account_id=:accountId AND transaction_time Between :startDate AND :endDate order by transaction_time desc" , nativeQuery = true)
-	List<TransactionRecord> findRecordsByChosenTime( @Param("accountId") Long accountId, 
+	@Query(value = "SELECT * From transaction_record WHERE account_id= :id AND transaction_time Between :startDate AND :endDate order by transaction_time desc" , nativeQuery = true)
+	List<TransactionRecord> findRecordsByChosenTime( @Param("id")        Long accountId, 
 			                     	                 @Param("startDate") Date startDate,
 			                                         @Param("endDate")   Date endDate);
 

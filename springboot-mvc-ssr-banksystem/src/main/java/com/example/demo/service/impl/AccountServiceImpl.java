@@ -167,9 +167,9 @@ public class AccountServiceImpl implements AccountService {
 	
 	
 	@Override
-	public Account getAccount(Long userId) {
+	public Account getAccount(Long accountId) {
 
-		Account account = accountRepository.findById(userId)
+		Account account = accountRepository.findById(accountId)
 				                           .orElseThrow(()->new AccountNotFoundException());
 		return account;
 	}

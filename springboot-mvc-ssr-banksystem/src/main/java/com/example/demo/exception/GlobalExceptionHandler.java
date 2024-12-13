@@ -61,15 +61,23 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(InsufficientFundsException.class)
     public String handleAccountException(Exception ex, Model model) {
         
+		
+		
         model.addAttribute("errorMessage", ex.getMessage());
         
         return "error";  
+        
+        
+        
     }
 	
 	
 	@ExceptionHandler(UnauthorizedException.class)
     public String handleAuthException(Exception ex, Model model) {
         
+		
+		
+		
         model.addAttribute("errorMessage", ex.getMessage());
         
         return "error";  

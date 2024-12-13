@@ -38,7 +38,7 @@ public interface AccountService {
 	List<Account> findAllUserAccounts(Long userId); 
 	
 	// 尋找指定帳號
-	Account getAccount(Long userId);
+	Account getAccount(Long accountId);  // ** 需更改
 	
 	// 獲取貨幣帳號總額
 	BigDecimal calcTotalBalance(UserDto userDto,Currency currency);

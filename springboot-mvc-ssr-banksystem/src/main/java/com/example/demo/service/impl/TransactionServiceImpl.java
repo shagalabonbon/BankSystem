@@ -129,10 +129,10 @@ public class TransactionServiceImpl implements TransactionService {
 			// 確認帳戶
 			
 			Account fromAccount = accountRepository.findByAccountNumber(fromAccountNumber)
-	                                               .orElseThrow(() -> new RuntimeException("來源帳戶不存在"));
+	                                               .orElseThrow(() -> new AccountNotFoundException("來源帳戶不存在"));
 			
 			Account toAccount = accountRepository.findByAccountNumber(toAccountNumber)
-	                                             .orElseThrow(() -> new RuntimeException("來源帳戶不存在"));
+	                                             .orElseThrow(() -> new AccountNotFoundException("來源帳戶不存在"));
 			
 			// 驗證金額
 		    
@@ -170,7 +170,16 @@ public class TransactionServiceImpl implements TransactionService {
 						
 		}catch (Exception e) {
 			
-			// 設置交易狀態為失敗，並記錄失敗原因
+			// 傳遞到交易失敗頁面
+			
+			transactionRecord = transactionRecordService.createTransactionRecord( 
+					fromAccountNumber,
+					toAccountNumber,
+	                amount,
+	                TransactionType.Transfer,
+	                e.getMessage()
+	        );
+			
 			transactionRecord.setStatus(TransactionStatus.Failed);
 			transactionRecord.setDescription("交易失敗：" + e.getMessage());
 		}
