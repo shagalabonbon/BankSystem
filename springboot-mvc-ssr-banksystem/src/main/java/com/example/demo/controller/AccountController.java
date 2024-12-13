@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.demo.model.dto.TransactionDto;
+import com.example.demo.model.dto.TransactionRecordDto;
 import com.example.demo.model.dto.UserDto;
 import com.example.demo.model.entity.Account;
 import com.example.demo.service.AccountService;
@@ -49,7 +49,7 @@ public class AccountController {
 	
 	
 	@GetMapping("/{id}/transaction-history")
-	public String TxHistoryPage(@PathVariable Long accountId , Model model) {
+	public String TxHistoryPage(@PathVariable("id") Long accountId , Model model) {
 		
 		// 驗證帳戶 ( 可改成從 session 獲取 )
 		
@@ -57,7 +57,7 @@ public class AccountController {
 		
 		// 尋找所有交易紀錄
 		
-		List<TransactionDto> transactionDtos = transactionService.getAllTransactionHistory(accountId);
+		List<TransactionRecordDto> transactionDtos = transactionService.getAllTransactionHistory(accountId);
 		
 		model.addAttribute("account",account);
 		
@@ -68,9 +68,9 @@ public class AccountController {
 	}
 	
 	@PostMapping("/{id}/transaction-history/between")
-	public String intervalTxHistory(@PathVariable Long accountId, @RequestParam String startDate,@RequestParam String endDate , Model model) {
+	public String intervalTxHistory(@PathVariable("id") Long accountId, @RequestParam String startDate,@RequestParam String endDate , Model model) {
 		
-		List<TransactionDto> chosenTransactionDtos = transactionService.getIntervalTransactionHistory(accountId,startDate,endDate);
+		List<TransactionRecordDto> chosenTransactionDtos = transactionService.getIntervalTransactionHistory(accountId,startDate,endDate);
 		
 		model.addAttribute("transactionDtos",chosenTransactionDtos);  // 覆蓋 transactionDtos 以更新前端顯示資料 
 		
@@ -81,7 +81,7 @@ public class AccountController {
 	@PostMapping("/{id}/transaction-history/top50")
 	public String top50TxHistory( @PathVariable("id") Long accountId , Model model) {
 		
-		List<TransactionDto> top50TransactionDtos = transactionService.getTop50TransactionHistory(accountId);
+		List<TransactionRecordDto> top50TransactionDtos = transactionService.getTop50TransactionHistory(accountId);
 		
 		model.addAttribute("transactionDtos",top50TransactionDtos);
 		

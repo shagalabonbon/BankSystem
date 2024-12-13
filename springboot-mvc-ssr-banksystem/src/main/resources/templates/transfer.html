@@ -13,8 +13,8 @@
 	
 		轉出帳號：<input type="text" th:field="*{fromAccountNumber}" placeholder="" required><p/>            
 		轉入帳號：<input type="text" th:field="*{toAccountNumber}"   placeholder="" required><p/>
-		轉帳金額：<input type="text" th:field="*{amount}"            placeholder="" required><p/>
-		轉帳備註：<input type="text" th:field="*{description}"       placeholder="" required><p/>
+		轉帳金額：<input type="text" th:field="*{amount}"            placeholder="" required><p/>  <!-- amount < 0 直接跳錯誤  -->
+		轉帳備註：<input type="text" th:field="*{description}"       placeholder="" ><p/>
 		
 		<button type="submit">進行轉帳</button><p/>
 		

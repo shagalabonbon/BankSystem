@@ -13,7 +13,7 @@ import com.example.demo.model.dto.UserDto;
 import com.example.demo.model.entity.Account;
 import com.example.demo.model.entity.Branch;
 import com.example.demo.model.entity.Currency;
-import com.example.demo.model.entity.Transaction;
+import com.example.demo.model.entity.TransactionRecord;
 import com.example.demo.model.entity.User;
 
 

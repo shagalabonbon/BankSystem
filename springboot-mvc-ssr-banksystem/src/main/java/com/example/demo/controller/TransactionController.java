@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.model.dto.ExchangeRate;
-import com.example.demo.model.dto.TransactionDto;
-import com.example.demo.model.entity.Transaction;
+import com.example.demo.model.dto.TransactionRecordDto;
+import com.example.demo.model.entity.TransactionRecord;
 import com.example.demo.service.AccountService;
 import com.example.demo.service.ExchangeRateService;
 import com.example.demo.service.TransactionService;
@@ -54,13 +54,13 @@ public class TransactionController {
 	@GetMapping("/transfer")               // 轉帳頁面
 	public String transferPage(Model model) {
 		
-		model.addAttribute("transferDto", new TransactionDto()); // 當有使用 th:object，就必須要有已存入 model 的物件、或創建初始化的物件傳遞 
+		model.addAttribute("transferDto", new TransactionRecordDto()); // 當有使用 th:object，就必須要有已存入 model 的物件、或創建初始化的物件傳遞 
 		
 		return "transfer";            
 	}
 	
 	@PostMapping("/transfer/check")
-	public String checkTransfer(@ModelAttribute TransactionDto transferDto,Model model ) {
+	public String checkTransfer(@ModelAttribute TransactionRecordDto transferDto,Model model ) {
 		
 		model.addAttribute("transferDto",transferDto); // 將輸入資料傳遞到確認頁
 		
@@ -69,7 +69,7 @@ public class TransactionController {
 	
 	
 	@PostMapping("/transfer/confirm")
-	public String doTransfer( @ModelAttribute TransactionDto transferDto,Model model) {
+	public String doTransfer( @ModelAttribute TransactionRecordDto transferDto,Model model) {
 		
 		transactionService.transfer(transferDto.getFromAccountNumber(),transferDto.getToAccountNumber(),transferDto.getAmount(),transferDto.getDescription());
 		
@@ -90,14 +90,14 @@ public class TransactionController {
 		
 		model.addAttribute("exchangeRates",exchangeRates);  
 		
-		model.addAttribute("exchangeDto", new TransactionDto()); // 傳遞初始化物件 
+		model.addAttribute("exchangeDto", new TransactionRecordDto()); // 傳遞初始化物件 
 			
 		return "exchange";
 	}
 	
 	
 	@PostMapping("/exchange/check")
-	public String doExchange( @ModelAttribute TransactionDto exchangeDto,@RequestParam String targetRate,Model model) {
+	public String doExchange( @ModelAttribute TransactionRecordDto exchangeDto,@RequestParam String targetRate,Model model) {
 		
 		String formatAmount =  String.format("%.2f",exchangeDto.getAmount().divide(new BigDecimal(targetRate)).toString()); 
 		
@@ -113,7 +113,7 @@ public class TransactionController {
 	
 	
 	@PostMapping("/exchange/confirm") 
-	public String checkExchange(@ModelAttribute TransactionDto exchangeDto,@RequestParam String targetRate,@RequestParam String formatAmount,Model model) {
+	public String checkExchange(@ModelAttribute TransactionRecordDto exchangeDto,@RequestParam String targetRate,@RequestParam String formatAmount,Model model) {
 		
 		// 進行換匯 
 		

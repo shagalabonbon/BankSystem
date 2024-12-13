@@ -6,7 +6,7 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
-import com.example.demo.model.entity.Transaction;
+import com.example.demo.model.entity.TransactionRecord;
 import com.example.demo.model.enums.TransactionStatus;
 import com.example.demo.model.enums.TransactionType;
 
@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransactionDto {
+public class TransactionRecordDto {
 	
 	private Long   id;
 	

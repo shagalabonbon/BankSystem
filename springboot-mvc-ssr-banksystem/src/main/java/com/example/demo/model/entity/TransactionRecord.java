@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Transaction {                      // 交易紀錄
+public class TransactionRecord {                // 交易紀錄
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

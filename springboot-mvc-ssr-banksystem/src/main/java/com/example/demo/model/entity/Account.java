@@ -56,5 +56,5 @@ public class Account {
 	private Branch branch;
 	
 	@OneToMany(mappedBy = "account")
-	private List<Transaction> transactions;
+	private List<TransactionRecord> transactions;
 } 

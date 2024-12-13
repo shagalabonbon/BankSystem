@@ -34,6 +34,6 @@ public class AccountDto {
 	@Enumerated(EnumType.STRING)
 	private AccountType   accountType;
 	
-	private Currency currency;
+	private Currency      currency;
 	
 }

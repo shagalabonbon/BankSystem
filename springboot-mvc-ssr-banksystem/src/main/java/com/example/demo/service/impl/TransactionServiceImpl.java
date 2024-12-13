@@ -15,21 +15,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.exception.accountexception.AccountNotFoundException;
 import com.example.demo.exception.accountexception.InsufficientFundsException;
-import com.example.demo.model.dto.TransactionDto;
+import com.example.demo.model.dto.TransactionRecordDto;
 import com.example.demo.model.entity.Account;
-import com.example.demo.model.entity.Transaction;
+import com.example.demo.model.entity.TransactionRecord;
 import com.example.demo.model.enums.TransactionStatus;
 import com.example.demo.model.enums.TransactionType;
 import com.example.demo.repository.AccountRepository;
-import com.example.demo.repository.TransactionRepository;
+import com.example.demo.repository.TransactionRecordRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.TransactionRecordService;
 import com.example.demo.service.TransactionService;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
 	
 	@Autowired
-	private TransactionRepository transactionRepository;
+	private TransactionRecordService transactionRecordService ;
+	
+	@Autowired
+	private TransactionRecordRepository transactionRecordRepository;
 	
 	@Autowired
 	private AccountRepository accountRepository;
@@ -38,70 +42,7 @@ public class TransactionServiceImpl implements TransactionService {
 	private ModelMapper modelMapper;
 
 	
-	@Override
-	public Transaction createTransactionRecord( String fromAccountNumber,String toAccountNumber,BigDecimal amount,TransactionType transactionType,String description ) {
-		
-		Transaction newTransaction = new Transaction();
-		
-		newTransaction.setFromAccountNumber(fromAccountNumber);
-		newTransaction.setToAccountNumber(toAccountNumber);
-		newTransaction.setAmount(amount);
-		newTransaction.setTransactionType(transactionType);
-		newTransaction.setStatus(TransactionStatus.Pending);
-		newTransaction.setDescription(description);
-		newTransaction.setTransactionTime(new Timestamp(System.currentTimeMillis()));
-		newTransaction.setAccount(accountRepository.findByAccountNumber(fromAccountNumber)
-				                                   .orElseThrow(()->new AccountNotFoundException("帳戶不存在")));
-		
-		return newTransaction;
-						
-	}
-	
-	
-	@Override
-	public List<TransactionDto> getAllTransactionHistory(Long accountId){
-		
-		List<TransactionDto> allTransactionHistory = transactionRepository.findByAccountIdOrderByTransactionTimeDesc(accountId)
-                												          .stream()
-                												          .map(tx -> modelMapper.map(tx,TransactionDto.class))
-                												          .toList();
-		return allTransactionHistory; 
-	}
-	
-
-	@Override
-	public List<TransactionDto> getTop50TransactionHistory(Long accountId) {
-		
-		// session 獲取 id ( 可修改 )
-		
-		// 獲取前50筆紀錄	 	                           
-				                           
-		List<TransactionDto> Top50TransactionHistory = transactionRepository.findTop50ByAccountIdOrderByTransactionTimeDesc(accountId)
-				                                                            .stream()
-				                                                            .map(tx -> modelMapper.map(tx,TransactionDto.class))
-				                                                            .toList();			                           
-		return Top50TransactionHistory;
-	}
-	
-	
-	@Override
-	public List<TransactionDto> getIntervalTransactionHistory(Long accountId, String startDate, String endDate) {
-		
-		Date start = new Date(startDate);
-		
-		Date end   = new Date(endDate);
-		
-		List<TransactionDto> transactionDtos = transactionRepository.findRecordsByChosenTime(accountId, start, end)
-				                                                    .stream()
-				                                                    .map(tx->modelMapper.map(tx, TransactionDto.class))
-				                                                    .toList();
-		return transactionDtos;
-	}
-	
-	
-	
 	// 轉帳 ( 差錯誤處理 )
-
 
 	@Override
 	@Transactional(
@@ -109,19 +50,19 @@ public class TransactionServiceImpl implements TransactionService {
 		isolation = Isolation.READ_COMMITTED,
 		rollbackFor = {RuntimeException.class}
     )
-	public Transaction transfer(String fromAccountNumber,String toAccountNumber, BigDecimal amount, String description) {
+	public TransactionRecord transfer(String fromAccountNumber,String toAccountNumber, BigDecimal amount, String description) {
 		
-		Transaction transactionRecord = new Transaction();
+		TransactionRecord transactionRecord = new TransactionRecord();
 		
 		try {
 		
 			// 確認用戶
 				
 		    Account fromAccount = accountRepository.findByAccountNumber(fromAccountNumber)
-		                                           .orElseThrow(() -> new RuntimeException("來源帳戶不存在"));
+		                                           .orElseThrow(() -> new AccountNotFoundException("來源帳戶不存在"));
 	
 		    Account toAccount = accountRepository.findByAccountNumber(toAccountNumber)
-		                                         .orElseThrow(() -> new RuntimeException("目標帳戶不存在"));
+		                                         .orElseThrow(() -> new AccountNotFoundException("目標帳戶不存在"));
 			
 			// 驗證金額
 		    
@@ -149,25 +90,29 @@ public class TransactionServiceImpl implements TransactionService {
 		    
 			// 創建交易紀錄並設置成功狀態
 		    
-		    transactionRecord = createTransactionRecord( 
+		    transactionRecord = transactionRecordService.createTransactionRecord( 
 		    		            	fromAccount.getAccountNumber(),
 		    		                toAccount.getAccountNumber(),
 		    		                amount,
 		    		                TransactionType.Transfer,
-		    		                description
-		    		            );
+		    		                description );
 		    
 		    transactionRecord.setStatus(TransactionStatus.Success);
 		    
 		}catch (Exception e) {
 			
-			// 設置交易狀態為失敗，並記錄失敗原因		
-			
-			transactionRecord.setStatus(TransactionStatus.Failed);
-			transactionRecord.setDescription("交易失敗：" + e.getMessage());
+			transactionRecord = transactionRecordService.createTransactionRecord( 
+					fromAccountNumber,
+					toAccountNumber,
+	                amount,
+	                TransactionType.Transfer,
+	                "交易失敗：" + e.getMessage() );
+
+            transactionRecord.setStatus(TransactionStatus.Failed);
+ 
 		}
 		
-		transactionRepository.save(transactionRecord);  // 儲存交易紀錄
+		transactionRecordRepository.save(transactionRecord);  // 儲存交易紀錄
 	    
 		return transactionRecord;
 	}
@@ -175,9 +120,9 @@ public class TransactionServiceImpl implements TransactionService {
 	// 換匯
 	
 	@Override
-	public Transaction exchange(String fromAccountNumber,String toAccountNumber, BigDecimal exchangeRate, BigDecimal amount ,String description) {
+	public TransactionRecord exchange(String fromAccountNumber,String toAccountNumber, BigDecimal exchangeRate, BigDecimal amount ,String description) {
 		
-		Transaction transactionRecord = new Transaction();
+		TransactionRecord transactionRecord = new TransactionRecord();
 		
 		try {
 			
@@ -213,9 +158,9 @@ public class TransactionServiceImpl implements TransactionService {
 			
 			// 創建交易紀錄並設置成功狀態
 		    
-		    transactionRecord = createTransactionRecord( 
-		    		            	fromAccount.getAccountNumber(),
-		    		                toAccount.getAccountNumber(),
+		    transactionRecord = transactionRecordService.createTransactionRecord( 
+		    						fromAccountNumber,
+		    						toAccountNumber,
 		    		                amount,
 		    		                TransactionType.Transfer,
 		    		                description
@@ -231,7 +176,7 @@ public class TransactionServiceImpl implements TransactionService {
 		}
 		
 		
-		transactionRepository.save(transactionRecord);  // 儲存交易紀錄
+		transactionRecordRepository.save(transactionRecord);  // 儲存交易紀錄
 		
 		return transactionRecord;
 	}

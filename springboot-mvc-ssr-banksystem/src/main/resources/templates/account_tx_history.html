@@ -9,14 +9,14 @@
 
 	<h1>交易紀錄查詢</h1>    <!-- account 來自 TxHistoryPage -->
 	
-	<form th:action="@{/bank/account/{id}/transaction-history/between} (id=${account.id})" method="post">
+	<form th:action="@{/bank/account/{id}/transaction-history/between(id=${account.id})}" method="post">
 		交易區間：<input type="date" name="startDate" > ~ <input type="date" name="endDate"> <br>
 		<button type="submit">查詢</button>
 	</form>
 	
 	<br>
 	
-	<form th:action="@{/bank/account/{id}/transaction-history/top50" method="post">
+	<form th:action="@{/bank/account/{id}/transaction-history/top50(id=${account.id})}" method="post">
 		<button type="submit">檢視最近 50 筆交易</button>
 	</form>
 	
